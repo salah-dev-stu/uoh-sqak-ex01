@@ -6,7 +6,7 @@ Starts at 1.00 and bumps by +0.01 per change. Configs carry their own
 
 from __future__ import annotations
 
-__version__ = "1.00"
+__version__ = "1.01"
 
 
 def parse(version: str) -> tuple[int, int]:
