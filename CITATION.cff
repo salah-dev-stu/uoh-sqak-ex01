@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+title: "Sinusoid Extractor — FC vs RNN vs LSTM (HW1, Course 203.3763)"
+authors:
+  - family-names: Qadah
+    given-names: Salah
+    affiliation: "University of Haifa"
+    orcid: ""
+date-released: 2026-05-04
+version: "1.00"
+license: MIT
+repository-code: "https://github.com/salah-dev-stu/sinusoid-extractor"
+keywords:
+  - pytorch
+  - rnn
+  - lstm
+  - signal-processing
+  - sinusoid
+  - university-of-haifa
+abstract: >
+  Implementation and comparative analysis of three neural architectures
+  (Fully Connected, Vanilla RNN with tanh, LSTM) for extracting a chosen
+  pure sinusoid from a noisy 4-sine mixture (1, 3, 5, 7 Hz). Built as
+  HW1 for course 203.3763 "Orchestration of AI Agents" at the University
+  of Haifa, Spring 2026.
