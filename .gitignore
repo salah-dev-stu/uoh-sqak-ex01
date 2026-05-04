@@ -1,0 +1,47 @@
+# --- secrets ---
+.env
+*.key
+*.pem
+credentials.json
+
+# --- python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# --- uv ---
+# uv.lock IS tracked (per RULES.md §18)
+
+# --- pytest / coverage ---
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# --- jupyter ---
+.ipynb_checkpoints/
+
+# --- editor / OS ---
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# --- ruff ---
+.ruff_cache/
+
+# --- generated artifacts (regeneratable) ---
+data/raw/*.npz
+data/processed/*.npz
+results/runs/
+logs/
