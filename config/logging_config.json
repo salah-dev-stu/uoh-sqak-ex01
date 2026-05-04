@@ -1,0 +1,23 @@
+{
+  "version": "1.00",
+  "_comment": "Python logging dictConfig. Console at INFO; rotating file at DEBUG.",
+  "formatters": {
+    "structured": {
+      "format": "%(asctime)s %(name)s %(levelname)s %(message)s"
+    }
+  },
+  "handlers": {
+    "console": {
+      "class": "logging.StreamHandler",
+      "level": "INFO",
+      "formatter": "structured",
+      "stream": "ext://sys.stdout"
+    }
+  },
+  "root": {
+    "level": "INFO",
+    "handlers": ["console"]
+  },
+  "version_format": 1,
+  "disable_existing_loggers": false
+}
