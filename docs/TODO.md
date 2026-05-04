@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Document version | 1.00 |
-| Total tasks | 1002 |
+| Total tasks | 1042 |
 | Last updated | 2026-05-04 |
 | Companion docs | `PRD.md`, `PLAN.md`, per-mechanism PRDs |
 
@@ -1100,6 +1100,51 @@
 - [ ] DOC-024: Add missing TODO items found in audit
 - [ ] DOC-025: Sign-off comment at top of each doc
 
+## Phase 18.5 — Verify-Pass Gap Fillers (P1) [40 tasks]
+
+Found during the explicit Verify Pass audit (PRD requirements ↔ TODO coverage).
+
+- [ ] VRF-001: Add `scripts/check_no_hardcoded.py` greping for hardcoded URLs / paths / numbers in src/
+- [ ] VRF-002: Unit test for VRF-001 script
+- [ ] VRF-003: Add `scripts/render_notebook.py` exporting `analysis.ipynb` to PDF + HTML
+- [ ] VRF-004: Verify VRF-003 output rendered LaTeX equations correctly
+- [ ] VRF-005: Add `scripts/dataset_hash.py` to print SHA256 of generated arrays for reproducibility
+- [ ] VRF-006: Run VRF-005 on two seeds, confirm hash equality on same seed
+- [ ] VRF-007: Add `scripts/run_ci.sh` chaining lint + test + file-size + secret scan
+- [ ] VRF-008: Add `Makefile` target `make ci` invoking VRF-007
+- [ ] VRF-009: Run `make ci` — must pass before each phase commit
+- [ ] VRF-010: Add `LICENSE` file (MIT) at repo root
+- [ ] VRF-011: Add `CITATION.cff` (or BibTeX in README) for academic reference
+- [ ] VRF-012: Add `CHANGELOG.md` with v1.00 entry
+- [ ] VRF-013: Add `assets/architecture.png` (export of C4 container diagram)
+- [ ] VRF-014: Add `assets/loss_curve_example.png` (montage from results/)
+- [ ] VRF-015: Add `assets/heatmap_example.png` (best heatmap from results/)
+- [ ] VRF-016: Embed assets in README RDM-026 (verify they render)
+- [ ] VRF-017: Verify `git log --oneline | wc -l ≥ 50` before push
+- [ ] VRF-018: Add `scripts/preflight_submission.py` checking all rubric items
+- [ ] VRF-019: Run preflight script and resolve every failure
+- [ ] VRF-020: Submission rehearsal: render PDF locally, eyeball it
+- [ ] VRF-021: Edge: notebook reads CSV with no rows → graceful "no data yet" message
+- [ ] VRF-022: Edge: training_service called twice with same seed → identical run_id collision handled
+- [ ] VRF-023: Edge: gatekeeper called for non-existent service → falls back to default limits cleanly
+- [ ] VRF-024: Performance benchmark: log per-arch param count vs final loss table
+- [ ] VRF-025: Performance benchmark: log wall-clock per epoch table
+- [ ] VRF-026: AI assistance acknowledgment in notebook conclusion (NB-060) — verify substantive paragraph
+- [ ] VRF-027: AI assistance acknowledgment in README (RDM-021) — verify substantive paragraph
+- [ ] VRF-028: PROMPTS.md has at least 10 distinct prompt entries with meta-reflections
+- [ ] VRF-029: PROMPTS.md links to specific commits / files for traceability
+- [ ] VRF-030: Verify `__all__` exposed only public symbols in every package `__init__.py`
+- [ ] VRF-031: Verify `__version__ = "1.00"` in `src/sinusoid_extractor/__init__.py`
+- [ ] VRF-032: Verify `setup.json` "version" == "1.00"
+- [ ] VRF-033: Verify `rate_limits.json` "version" == "1.00"
+- [ ] VRF-034: Verify all per-mechanism PRDs cross-reference PRD.md FR IDs
+- [ ] VRF-035: Verify SUBMISSION_CHECKLIST.md is fully ticked before upload
+- [ ] VRF-036: Confirm `pyproject.toml` author field includes Salah Qadah
+- [ ] VRF-037: Confirm `pyproject.toml` license field MIT
+- [ ] VRF-038: Confirm GitHub repo description filled
+- [ ] VRF-039: Confirm GitHub repo topics include `pytorch`, `lstm`, `rnn`, `university-of-haifa`
+- [ ] VRF-040: After push, verify `gh repo view` shows public visibility
+
 ## Phase 18 — Submission (P0) [20 tasks]
 
 - [ ] SUB-001: Confirm group code with user
@@ -1173,7 +1218,7 @@ This section is filled in during the explicit "Verify Pass" stage (after all doc
 
 ## Definition of Done (Project)
 
-- All 1002 tasks above are `[x]`.
+- All 1042 tasks above are `[x]`.
 - `uv run ruff check src/ tests/` returns 0.
 - `uv run pytest --cov` reports ≥ 85%.
 - `scripts/check_file_lines.py` reports 0 violations.
