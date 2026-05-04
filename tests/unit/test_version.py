@@ -6,8 +6,13 @@ from sinusoid_extractor.shared import version
 from sinusoid_extractor.shared.version import bump, is_compatible, parse
 
 
-def test_version_constant_starts_at_1_00() -> None:
-    assert version.__version__ == "1.00"
+def test_version_constant_is_major_1() -> None:
+    """Project versioning starts at 1.00 and bumps by +0.01 per change.
+
+    Compatibility check (RULES.md §15) is by MAJOR — assert MAJOR == 1.
+    """
+    major, _ = parse(version.__version__)
+    assert major == 1
 
 
 def test_parse_valid() -> None:

@@ -6,6 +6,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to a simple `MAJOR.MINOR` versioning scheme starting
 at `1.00` and incrementing by `+0.01` per change (RULES.md §15).
 
+## [1.03] — 2026-05-04 (pre-submission polish)
+
+### Added
+- README §10 "Results — hypothesis verdicts": full table + mechanistic explanation
+  of why H1/H3 were disconfirmed, with embedded FFT spectrum.
+- Notebook §2 "Signal model" LaTeX block (per-source formula + combined sum).
+- Notebook §7 "Loss recap" + "Statistical test verdict rule" LaTeX blocks.
+- Notebook §7.5 "Mechanistic interpretation" markdown cell explaining the
+  10-ms-window vs target-period mismatch.
+- `scripts/mark_todo_done.py` (one-shot TODO hygiene utility).
+
+### Changed
+- Notebook §2 FFT plot: extended `xlim` and `freqs` mask so the 7 Hz peak is
+  visible; added per-peak Hz annotations.
+- `docs/TODO.md`: marked 1001/1042 (96%) tasks complete based on actual repo
+  state; 41 intentionally `[ ]` with rationale (38 pending submission/repo,
+  3 superseded by Makefile/test coverage).
+- Author email in `pyproject.toml` and README updated to
+  `sqadah02@campus.haifa.ac.il`.
+
+### Versioning
+- `1.00` → `1.01`: TODO hygiene + email correction.
+- `1.01` → `1.02`: notebook depth (FFT fix, LaTeX equations, mechanistic cell).
+- `1.02` → `1.03`: README results section + housekeeping.
+
 ## [1.00] — 2026-05-04
 
 ### Added

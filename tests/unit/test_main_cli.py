@@ -6,10 +6,11 @@ from sinusoid_extractor.main import build_parser, main
 
 
 def test_version_command(capsys) -> None:
+    from sinusoid_extractor.shared.version import __version__
     rc = main(["version"])
     out = capsys.readouterr().out.strip()
     assert rc == 0
-    assert out == "1.00"
+    assert out == __version__
 
 
 def test_parser_rejects_bad_arch() -> None:

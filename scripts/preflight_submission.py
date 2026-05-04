@@ -69,27 +69,38 @@ def _check_todo_size() -> str | None:
     return None
 
 
-@check("__version__ == 1.00")
+@check("__version__ MAJOR == 1 (compat with starting 1.00)")
 def _check_code_version() -> str | None:
     text = (REPO / "src" / "sinusoid_extractor" / "shared" / "version.py").read_text()
-    if '"1.00"' not in text:
-        return "version.py missing 1.00"
+    m = re.search(r'__version__\s*=\s*"(\d+)\.(\d+)"', text)
+    if not m:
+        return "version.py missing __version__"
+    if int(m.group(1)) != 1:
+        return f"version.py MAJOR != 1 (got {m.group(1)})"
     return None
 
 
-@check("setup.json version == 1.00")
+@check("setup.json version MAJOR == 1")
 def _check_setup_version() -> str | None:
     cfg = json.loads((REPO / "config" / "setup.json").read_text())
-    if cfg.get("version") != "1.00":
-        return f"setup.json version={cfg.get('version')!r}"
+    v = str(cfg.get("version", ""))
+    m = re.match(r"^(\d+)\.(\d+)$", v)
+    if not m:
+        return f"setup.json version malformed: {v!r}"
+    if int(m.group(1)) != 1:
+        return f"setup.json MAJOR != 1 (got {v!r})"
     return None
 
 
-@check("rate_limits.json version == 1.00")
+@check("rate_limits.json version MAJOR == 1")
 def _check_rl_version() -> str | None:
     cfg = json.loads((REPO / "config" / "rate_limits.json").read_text())
-    if cfg.get("version") != "1.00":
-        return f"rate_limits.json version={cfg.get('version')!r}"
+    v = str(cfg.get("version", ""))
+    m = re.match(r"^(\d+)\.(\d+)$", v)
+    if not m:
+        return f"rate_limits.json version malformed: {v!r}"
+    if int(m.group(1)) != 1:
+        return f"rate_limits.json MAJOR != 1 (got {v!r})"
     return None
 
 

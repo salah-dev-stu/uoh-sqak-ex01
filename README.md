@@ -17,12 +17,13 @@
 7. [Configuration](#configuration)
 8. [Project structure](#project-structure)
 9. [Testing](#testing)
-10. [Notebook (analysis)](#notebook-analysis)
-11. [Extending the project](#extending-the-project)
-12. [Troubleshooting](#troubleshooting)
-13. [Contribution guidelines](#contribution-guidelines)
-14. [License & credits](#license--credits)
-15. [AI assistance](#ai-assistance)
+10. [Results — hypothesis verdicts](#results--hypothesis-verdicts)
+11. [Notebook (analysis)](#notebook-analysis)
+12. [Extending the project](#extending-the-project)
+13. [Troubleshooting](#troubleshooting)
+14. [Contribution guidelines](#contribution-guidelines)
+15. [License & credits](#license--credits)
+16. [AI assistance](#ai-assistance)
 
 ---
 
@@ -156,7 +157,7 @@ print(report.test_mse, report.per_freq_mse)
 
 ## Configuration
 
-All tunables live in `config/setup.json` (versioned, starts at `1.00`). Bumping any value should bump the version per RULES.md §15.
+All tunables live in `config/setup.json` (versioned, currently `1.03`; started at `1.00`). Bumping any value should bump the version per RULES.md §15 — see `CHANGELOG.md` for history.
 
 | Section | Key | Default | Notes |
 |---|---|---|---|
@@ -230,6 +231,38 @@ uv run python scripts/check_file_lines.py
 Current state: **173 tests passing, 95% statement coverage, ruff 0 errors, every `.py` ≤ 150 logical lines.**
 
 Test structure mirrors `src/` so locating the test for any source file takes seconds.
+
+## Results — hypothesis verdicts
+
+We ran the full $3 \text{ archs} \times 4 \text{ alphas} \times 3 \text{ seeds} = 36$ training runs plus a 36-run OAT sensitivity sweep (~13 minutes CPU). Per-run loss histories live under `results/runs/<run_id>/`; aggregates live in `results/experiment_matrix.csv` and `results/sensitivity.csv`; the paired hypothesis tests are persisted to `results/hypothesis_test.json`. The FFT spectrum below is the sanity check that all four source frequencies are present in the combined signal $\Sigma$:
+
+![FFT spectrum of Σ — peaks at 1, 3, 5, 7 Hz](results/figs/fft_spectrum.png)
+
+### Verdicts (Wilcoxon signed-rank, paired by (alpha, seed, freq), $\alpha = 0.05$)
+
+| Hypothesis | Mean MSE A | Mean MSE B | Median paired diff | p-value | Verdict |
+|---|---|---|---|---|---|
+| **H1**: $\text{MSE}_{\text{RNN}} < \text{MSE}_{\text{LSTM}}$ at high freq (5, 7 Hz) | RNN: 0.336 | LSTM: 0.272 | +0.054 | 5.3e-05 | **DISCONFIRMED** — LSTM beats RNN at high freq too |
+| **H2**: $\text{MSE}_{\text{LSTM}} < \text{MSE}_{\text{RNN}}$ at low freq (1, 3 Hz) | LSTM: 0.261 | RNN: 0.325 | −0.049 | 1.6e-03 | **CONFIRMED** |
+| **H3a**: $\text{MSE}_{\text{FC}} > \text{MSE}_{\text{RNN}}$ across all freqs | FC: 0.222 | RNN: 0.330 | −0.093 | 7.1e-15 | **DISCONFIRMED** — FC beats RNN everywhere |
+| **H3b**: $\text{MSE}_{\text{FC}} > \text{MSE}_{\text{LSTM}}$ across all freqs | FC: 0.222 | LSTM: 0.267 | −0.028 | 6.7e-07 | **DISCONFIRMED** — FC beats LSTM everywhere |
+
+**The headline finding is unexpected**: the **Fully Connected baseline outperforms both recurrent architectures at every noise level**. LSTM is second; vanilla RNN is third. H1 is reversed; H2 holds; H3 is reversed in the strongest sense (FC is the *ceiling*, not the floor).
+
+### Why? (mechanistic explanation)
+
+The unifying explanation is one number: **the context window is 10 samples at $F_s = 1000$ Hz, i.e. 10 ms**. Compare to the period of each target frequency:
+
+| Target | Period | Cycles in window |
+|---|---|---|
+| 1 Hz | 1000 ms | 0.010 |
+| 3 Hz | 333 ms | 0.030 |
+| 5 Hz | 200 ms | 0.050 |
+| 7 Hz | 143 ms | 0.070 |
+
+Within 0.07 of a cycle, every target signal is essentially monotonic across the window. Neither recurrence (RNN's 10-step tanh hidden update) nor long-range memory (LSTM's cell state) can exploit periodicity that doesn't manifest in the input. FC, freed of the sequential bottleneck, treats the 10-dim window as static features and wins by default. The lecturer's hypothesis would be properly testable at a context window of $\geq 1$ full period of the highest target frequency (1000 / 7 ≈ **143 samples**) — out of scope for this homework but the natural follow-up.
+
+**Honest caveat**: this result does not invalidate H1 / H3 as general claims about RNN vs LSTM vs FC — it tells us the regime in which we tested is wrong for the hypothesis to apply. Per the lecturer's instruction, *the analysis is what matters, not whether the experiment confirmed the prior*. Full mechanistic reasoning + per-cell numbers are in `notebooks/analysis.ipynb` §7-§8.
 
 ## Notebook (analysis)
 

@@ -17,8 +17,9 @@ def sdk(tiny_config_path, rate_limits_path, monkeypatch, tmp_path) -> SinusoidEx
 
 
 def test_health_check(sdk: SinusoidExtractorSDK) -> None:
+    from sinusoid_extractor.shared.version import __version__
     h = sdk.health_check()
-    assert h["version"] == "1.00"
+    assert h["version"] == __version__
     assert {"fc", "rnn", "lstm"} <= set(h["registered_architectures"])
 
 
