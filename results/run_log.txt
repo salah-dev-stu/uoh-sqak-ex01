@@ -1,0 +1,5 @@
+=== Running experiment matrix (3 archs × 4 alphas × 3 seeds = 36 runs) ===
+matrix done: 36 runs in 5.9 min
+=== Running OAT sweep ===
+oat done: 36 runs in 7.1 min
+DONE
