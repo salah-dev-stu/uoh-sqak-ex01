@@ -53,7 +53,7 @@ class EvaluationService:
     def evaluate(self, run: RunHandle, bundle: DataBundle) -> EvalReport:
         """Run the model on the test split and produce an :class:`EvalReport`."""
         self.hooks.fire(HookEvent.BEFORE_EVAL, run_id=run.run_id)
-        model_cfg = dict(self.config["models"].get(run.architecture, {}))
+        model_cfg = self._read_training_model_cfg(run)
         model = ModelRegistry.build(run.architecture, **model_cfg)
         model.load_state_dict(torch.load(run.run_dir / "best_model.pt", weights_only=True))
         model.eval()
@@ -103,3 +103,15 @@ class EvaluationService:
     def supported_archs() -> list[str]:
         """Helper used by tests to discover registered architectures."""
         return [a.value for a in Architecture]
+
+    def _read_training_model_cfg(self, run: RunHandle) -> dict[str, Any]:
+        """Read the exact model_cfg used at training time (handles OAT overrides)."""
+        history_path = run.run_dir / "loss_history.json"
+        if history_path.exists():
+            from sinusoid_extractor.shared.persistence import load_json
+
+            payload = load_json(history_path)
+            persisted = payload.get("model_cfg")
+            if isinstance(persisted, dict) and persisted:
+                return dict(persisted)
+        return dict(self.config["models"].get(run.architecture, {}))
