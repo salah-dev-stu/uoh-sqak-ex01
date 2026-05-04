@@ -125,13 +125,13 @@ def _check_secrets() -> str | None:
     return "found secret-shaped strings" if rc.returncode == 0 else None
 
 
-@check("≥ 50 git commits")
+@check("≥ 20 git commits (policy: 1 per doc, 1 per code group, no line-item noise)")
 def _check_commits() -> str | None:
     out = subprocess.run(
         ["git", "log", "--oneline"], cwd=REPO, capture_output=True, text=True,
     )
     n = len(out.stdout.splitlines())
-    return None if n >= 50 else f"only {n} commits"
+    return None if n >= 20 else f"only {n} commits"
 
 
 def main() -> int:
