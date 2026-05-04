@@ -12,7 +12,13 @@ import numpy as np
 
 
 class SignalGenerator:
-    """Stateless, deterministic generator of clean sinusoids."""
+    """Stateless, deterministic generator of clean sinusoids.
+
+    Building Block (RULES.md §16):
+        Input  : frequency_hz (float, > 0, finite), phase (float, optional)
+        Output : 1-D float32 ndarray of length N = Fs * T
+        Setup  : amplitude (> 0), sampling_rate_hz (int > 0), duration_seconds (> 0)
+    """
 
     def __init__(
         self,

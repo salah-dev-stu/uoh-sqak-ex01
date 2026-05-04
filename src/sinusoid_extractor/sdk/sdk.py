@@ -27,7 +27,16 @@ _log = logging.getLogger(__name__)
 
 
 class SinusoidExtractorSDK:
-    """One-stop SDK for dataset generation, training, evaluation, sweeps."""
+    """One-stop SDK for dataset generation, training, evaluation, sweeps.
+
+    Building Block (RULES.md §16):
+        Input  : (per method) alpha, seed, arch, bundle, run, etc.
+                 — see method signatures.
+        Output : (per method) DataBundle | RunHandle | EvalReport |
+                 list[RunHandle] | dict.
+        Setup  : config_path (Path | None), results_dir (Path | None),
+                 gatekeeper (Gatekeeper | None — for DI in tests)
+    """
 
     def __init__(
         self,

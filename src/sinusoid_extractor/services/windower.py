@@ -6,7 +6,14 @@ import numpy as np
 
 
 class Windower:
-    """Pulls fixed-length windows from a 1-D signal at random start offsets."""
+    """Pulls fixed-length windows from a 1-D signal at random start offsets.
+
+    Building Block (RULES.md §16):
+        Input  : signal (1-D ndarray), n_total / n_windows / n_train,val,test (ints)
+        Output : starts (int64 ndarray) and/or extracted slices
+                 of shape (n_windows, window_size)
+        Setup  : window_size (int >= 1), rng (numpy.random.Generator)
+    """
 
     def __init__(self, window_size: int, rng: np.random.Generator) -> None:
         if window_size < 1:

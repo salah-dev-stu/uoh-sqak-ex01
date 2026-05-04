@@ -20,7 +20,14 @@ _log = logging.getLogger(__name__)
 
 
 class DatasetService:
-    """Orchestrates the dataset pipeline."""
+    """Orchestrates the dataset pipeline.
+
+    Building Block (RULES.md §16):
+        Input  : alpha (float in [0, 1]), seed (int)
+        Output : (raw_signals: dict[str, ndarray] of 9 arrays, DataBundle)
+        Setup  : DatasetConfig dict (frequencies_hz, amplitude, sampling_rate_hz,
+                 duration_seconds, context_window, n_train, n_val, n_test)
+    """
 
     def __init__(self, dataset_cfg: dict[str, Any]) -> None:
         self.cfg = dataset_cfg

@@ -8,7 +8,15 @@ from sinusoid_extractor.constants import FIXED_FREQUENCIES_HZ, ONE_HOT_DIM
 
 
 class Splitter:
-    """Assigns one-hot selectors and emits matching tuples."""
+    """Assigns one-hot selectors and emits matching tuples.
+
+    Building Block (RULES.md §16):
+        Input  : combined (1-D ndarray), pure_by_freq (dict[int, ndarray]),
+                 starts (int64 ndarray), one_hot (n,4 float32), window_size (int)
+        Output : (C, x, y) tuple of float32 arrays
+                 shapes (n, 4), (n, window_size), (n, window_size)
+        Setup  : rng (numpy.random.Generator)
+    """
 
     def __init__(self, rng: np.random.Generator) -> None:
         if not isinstance(rng, np.random.Generator):

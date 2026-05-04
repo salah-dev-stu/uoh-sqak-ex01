@@ -15,7 +15,16 @@ _log = logging.getLogger(__name__)
 
 
 class SweepService:
-    """Orchestrates the full experiment matrix and OAT sweep."""
+    """Orchestrates the full experiment matrix and OAT sweep.
+
+    Building Block (RULES.md §16):
+        Input  : limit (int | None) — cap rows for smoke runs
+        Output : list[RunHandle]. Side-effects: appends rows to
+                 results/experiment_matrix.csv and results/sensitivity.csv;
+                 also writes per-run loss + eval JSONs via the inner services.
+        Setup  : config (full setup.json dict), results_dir (Path),
+                 training (TrainingService), evaluation (EvaluationService)
+    """
 
     def __init__(
         self,

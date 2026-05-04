@@ -18,7 +18,14 @@ _log = logging.getLogger(__name__)
 
 
 class NoiseModel:
-    """Random noise application — amplitude per-sample, phase per-realisation."""
+    """Random noise application — amplitude per-sample, phase per-realisation.
+
+    Building Block (RULES.md §16):
+        Input  : pure (1-D ndarray), alpha (float in [0, 1]),
+                 distribution (NoiseDistribution, default UNIFORM)
+        Output : noisy 1-D float32 ndarray, same shape as input
+        Setup  : rng (numpy.random.Generator, injected for determinism)
+    """
 
     def __init__(self, rng: np.random.Generator) -> None:
         if not isinstance(rng, np.random.Generator):

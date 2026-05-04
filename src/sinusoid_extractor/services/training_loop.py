@@ -38,7 +38,14 @@ class TrainingResult:
 
 
 class TrainingLoop:
-    """Trains a model end-to-end and returns a :class:`TrainingResult`."""
+    """Trains a model end-to-end and returns a :class:`TrainingResult`.
+
+    Building Block (RULES.md §16):
+        Input  : train_loader, val_loader (DataLoader), hooks (HookRegistry, optional)
+        Output : TrainingResult (loss histories, epochs run, wall-clock,
+                 best val loss, best epoch, best state_dict)
+        Setup  : model, optimizer, loss_fn, max_epochs, early_stopping, device
+    """
 
     def __init__(
         self,

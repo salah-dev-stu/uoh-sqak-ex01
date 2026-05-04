@@ -37,7 +37,15 @@ class RunHandle:
 
 
 class TrainingService:
-    """Builds model + optimizer + loaders and runs a :class:`TrainingLoop`."""
+    """Builds model + optimizer + loaders and runs a :class:`TrainingLoop`.
+
+    Building Block (RULES.md §16):
+        Input  : arch (str | Architecture), bundle (DataBundle),
+                 hyperparams_override (dict | None), seed (int | None)
+        Output : (RunHandle, TrainingResult). Side-effects: persists
+                 best_model.pt + loss_history.json under results/runs/<run_id>/.
+        Setup  : config (full setup.json dict), results_dir (Path)
+    """
 
     def __init__(self, config: dict[str, Any], results_dir: Path) -> None:
         self.config = config

@@ -44,7 +44,16 @@ class EvalReport:
 
 
 class EvaluationService:
-    """Loads a trained checkpoint and computes metrics on the test split."""
+    """Loads a trained checkpoint and computes metrics on the test split.
+
+    Building Block (RULES.md §16):
+        Input  : run (RunHandle pointing to a completed training run),
+                 bundle (DataBundle whose test split we evaluate against)
+        Output : EvalReport (test_mse, test_mae, test_r2, test_snr_db,
+                 baseline_mse, n_test, per_freq_mse, per_freq_r2). Side-effect:
+                 persists eval_report.json next to loss_history.json.
+        Setup  : config (dict), hooks (HookRegistry, optional)
+    """
 
     def __init__(self, config: dict[str, Any], hooks: HookRegistry | None = None) -> None:
         self.config = config
