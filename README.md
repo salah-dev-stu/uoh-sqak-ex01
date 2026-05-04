@@ -313,7 +313,7 @@ sdk.training_service.train_loop.hooks.register(
 ## License & credits
 
 - License: MIT (see [`LICENSE`](LICENSE)).
-- Author: Salah Qadah (`ibrahim@zexit.ai`), University of Haifa.
+- Author: Salah Qadah (`sqadah02@campus.haifa.ac.il`), University of Haifa.
 - Course: 203.3763 — Orchestration of AI Agents · Dr. Yoram Reuven Segal.
 - Third-party: PyTorch, NumPy, SciPy, Matplotlib, Seaborn, Pandas, Jupyter — all under their respective open-source licenses.
 

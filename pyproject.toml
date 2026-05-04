@@ -1,12 +1,12 @@
 [project]
 name = "sinusoid-extractor"
-version = "1.00"
+version = "1.01"
 description = "FC vs RNN vs LSTM for extracting a chosen pure sine from a noisy 4-sine mixture (HW1, Course 203.3763, University of Haifa)"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
-    { name = "Salah Qadah", email = "ibrahim@zexit.ai" },
+    { name = "Salah Qadah", email = "sqadah02@campus.haifa.ac.il" },
 ]
 keywords = ["pytorch", "rnn", "lstm", "signal-processing", "sinusoid", "university-of-haifa"]
 classifiers = [
@@ -54,6 +54,7 @@ dev = [
     "ipykernel>=6.29",
     "jupyter>=1.0",
     "nbconvert>=7.16",
+    "python-docx>=1.2.0",
 ]
 
 [tool.ruff]
