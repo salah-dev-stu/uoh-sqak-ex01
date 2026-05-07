@@ -6,6 +6,59 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to a simple `MAJOR.MINOR` versioning scheme starting
 at `1.00` and incrementing by `+0.01` per change (RULES.md §15).
 
+## [1.07] — 2026-05-07 (frequency redesign + full re-experiment)
+
+### Changed
+- **Frequencies switched 1/3/5/7 → 20/60/100/200 Hz** (`config/setup.json`,
+  `constants.FIXED_FREQUENCIES_HZ`, `IDEA.md`, `docs/PRD.md`,
+  `docs/PRD_dataset.md`, README, notebook). Rationale (PRD §3.1, IDEA): the
+  10-sample window @ Fs=1000 Hz now covers 0.2 / 0.6 / 1.0 / 2.0 cycles —
+  spans sub-cycle and multi-cycle regimes so the recurrence-vs-FC question
+  is fairly testable. Previous design placed every target at ≤0.07 cycles
+  per window, structurally precluding any recurrence advantage.
+- **`Splitter` decoupled** from the `FIXED_FREQUENCIES_HZ` constant — now
+  takes `frequencies_hz` as a constructor parameter; `DatasetService`
+  passes its own configured value. Two stale tests were caught and tightened
+  in the same pass.
+- **`SweepService` per-frequency CSV columns are now dynamic**, derived from
+  `dataset_service.frequencies_hz`. Was hardcoded to `per_freq_mse_1hz/3hz/5hz/7hz`,
+  which silently produced all-NaN columns under the new freqs.
+- Notebook §2 dataset visualisation: time-axis shrunk to 100 ms (was 1 s) to
+  keep all 4 frequency panels readable; FFT plot's `xlim` now scales with
+  `max(FIXED_FREQUENCIES_HZ)`.
+- Notebook §7 hypothesis-test cell rewritten to split LOW (20, 60 Hz) and
+  HIGH (100, 200 Hz) frequency lists and to dump them in the JSON payload
+  for downstream auditing.
+- Notebook §7.5 "Mechanistic interpretation" rewritten with the new verdicts
+  and concrete per-pair MSE numbers; explains why LSTM still wins at high
+  freq even though H1 predicted RNN would.
+- Notebook §8 "Conclusion & Reflection" rewritten — now covers what worked,
+  what surprised, what's next, plus an honest assessment.
+- README §10 verdict table + mechanism paragraph rewritten with the new
+  numbers and the "FC is worst, not best" headline.
+
+### Re-ran
+- 36 base-matrix runs (~8.4 min CPU) + 36 OAT runs (~9.2 min CPU).
+- All 7 plots in `results/figs/`.
+- `results/hypothesis_test.json` now records the new verdicts.
+
+### Verdicts (Wilcoxon signed-rank, paired)
+- H1 disconfirmed (RNN > LSTM at high freq, p = 1.2e-07).
+- H2 confirmed (LSTM < RNN at low freq, p = 2.4e-07).
+- H3 confirmed for both arches (FC > RNN p = 3.9e-13; FC > LSTM p = 7.1e-15).
+
+## [1.06] — 2026-05-07 (frequency-redesign spec change)
+
+### Added
+- New section in `IDEA.md` and `docs/PRD.md`: "Frequency selection rationale"
+  explaining the cycle-fraction reasoning behind 20/60/100/200 Hz.
+
+### Changed
+- `config/setup.json` `dataset.frequencies_hz`: `[1, 3, 5, 7]` → `[20, 60, 100, 200]`.
+- `constants.FIXED_FREQUENCIES_HZ` updated to match.
+- `Splitter` decoupled from the constant; takes `frequencies_hz` via constructor.
+- 2 stale tests fixed (`test_splitter`, `test_constants`).
+
 ## [1.05] — 2026-05-04 (README screenshot embedding pass)
 
 ### Added

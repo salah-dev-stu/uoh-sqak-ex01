@@ -253,33 +253,35 @@ Test structure mirrors `src/` so locating the test for any source file takes sec
 
 We ran the full $3 \text{ archs} \times 4 \text{ alphas} \times 3 \text{ seeds} = 36$ training runs plus a 36-run OAT sensitivity sweep (~13 minutes CPU). Per-run loss histories live under `results/runs/<run_id>/`; aggregates live in `results/experiment_matrix.csv` and `results/sensitivity.csv`; the paired hypothesis tests are persisted to `results/hypothesis_test.json`. The FFT spectrum below is the sanity check that all four source frequencies are present in the combined signal $\Sigma$:
 
-![FFT spectrum of Σ — peaks at 1, 3, 5, 7 Hz](results/figs/fft_spectrum.png)
+![FFT spectrum of Σ — peaks at 20, 60, 100, 200 Hz](results/figs/fft_spectrum.png)
 
 ### Verdicts (Wilcoxon signed-rank, paired by (alpha, seed, freq), $\alpha = 0.05$)
 
 | Hypothesis | Mean MSE A | Mean MSE B | Median paired diff | p-value | Verdict |
 |---|---|---|---|---|---|
-| **H1**: $\text{MSE}_{\text{RNN}} < \text{MSE}_{\text{LSTM}}$ at high freq (5, 7 Hz) | RNN: 0.336 | LSTM: 0.272 | +0.054 | 5.3e-05 | **DISCONFIRMED** — LSTM beats RNN at high freq too |
-| **H2**: $\text{MSE}_{\text{LSTM}} < \text{MSE}_{\text{RNN}}$ at low freq (1, 3 Hz) | LSTM: 0.261 | RNN: 0.325 | −0.049 | 1.6e-03 | **CONFIRMED** |
-| **H3a**: $\text{MSE}_{\text{FC}} > \text{MSE}_{\text{RNN}}$ across all freqs | FC: 0.222 | RNN: 0.330 | −0.093 | 7.1e-15 | **DISCONFIRMED** — FC beats RNN everywhere |
-| **H3b**: $\text{MSE}_{\text{FC}} > \text{MSE}_{\text{LSTM}}$ across all freqs | FC: 0.222 | LSTM: 0.267 | −0.028 | 6.7e-07 | **DISCONFIRMED** — FC beats LSTM everywhere |
+| **H1**: $\text{MSE}_{\text{RNN}} < \text{MSE}_{\text{LSTM}}$ at high freq (100, 200 Hz, multi-cycle) | RNN: 4.87e-4 | LSTM: 1.67e-4 | +1.4e-4 | 1.2e-07 | **DISCONFIRMED** — LSTM still wins at high freq |
+| **H2**: $\text{MSE}_{\text{LSTM}} < \text{MSE}_{\text{RNN}}$ at low freq (20, 60 Hz, sub-cycle) | LSTM: 5.36e-4 | RNN: 1.41e-3 | −2.6e-4 | 2.4e-07 | **CONFIRMED** |
+| **H3a**: $\text{MSE}_{\text{FC}} > \text{MSE}_{\text{RNN}}$ across all freqs | FC: 3.17e-3 | RNN: 9.47e-4 | +2.0e-3 | 3.9e-13 | **CONFIRMED** — FC is worse than RNN |
+| **H3b**: $\text{MSE}_{\text{FC}} > \text{MSE}_{\text{LSTM}}$ across all freqs | FC: 3.17e-3 | LSTM: 3.52e-4 | +2.3e-3 | 7.1e-15 | **CONFIRMED** — FC is worse than LSTM by ~9× |
 
-**The headline finding is unexpected**: the **Fully Connected baseline outperforms both recurrent architectures at every noise level**. LSTM is second; vanilla RNN is third. H1 is reversed; H2 holds; H3 is reversed in the strongest sense (FC is the *ceiling*, not the floor).
+**The headline finding** with the redesigned frequency set: **LSTM is the clear winner everywhere** (mean MSE 3.5 × 10⁻⁴, ~9 × better than FC and ~3 × better than vanilla RNN); FC is now the floor, not the ceiling. H2 is confirmed cleanly; H1 is disconfirmed because LSTM dominates RNN even at high freq; H3 is confirmed in the strongest sense (FC really is the worst). This is the opposite of the original 1/3/5/7 Hz draft, which placed every target at < 0.1 cycle per window and structurally precluded any recurrence advantage.
 
 ### Why? (mechanistic explanation)
 
-The unifying explanation is one number: **the context window is 10 samples at $F_s = 1000$ Hz, i.e. 10 ms**. Compare to the period of each target frequency:
+The unifying number is **how many cycles fit in the 10-sample window**:
 
-| Target | Period | Cycles in window |
-|---|---|---|
-| 1 Hz | 1000 ms | 0.010 |
-| 3 Hz | 333 ms | 0.030 |
-| 5 Hz | 200 ms | 0.050 |
-| 7 Hz | 143 ms | 0.070 |
+| Target | Period | Cycles / window | Regime |
+|---|---|---|---|
+| 20 Hz | 50 ms | 0.2 | sub-cycle (LOW) |
+| 60 Hz | 16.7 ms | 0.6 | sub-cycle (LOW) |
+| 100 Hz | 10 ms | 1.0 | multi-cycle (HIGH) |
+| 200 Hz | 5 ms | 2.0 | multi-cycle (HIGH) |
 
-Within 0.07 of a cycle, every target signal is essentially monotonic across the window. Neither recurrence (RNN's 10-step tanh hidden update) nor long-range memory (LSTM's cell state) can exploit periodicity that doesn't manifest in the input. FC, freed of the sequential bottleneck, treats the 10-dim window as static features and wins by default. The lecturer's hypothesis would be properly testable at a context window of $\geq 1$ full period of the highest target frequency (1000 / 7 ≈ **143 samples**) — out of scope for this homework but the natural follow-up.
+Once the window contains visible periodicity for at least some targets (the 100 Hz and 200 Hz channels), the recurrent inductive bias materialises: LSTM and RNN both build internal phase trackers across 10 timesteps and exploit the coherent oscillation. FC has no mechanism for this — it sees a 14-dim static feature vector and has to memorise the input→output map.
 
-**Honest caveat**: this result does not invalidate H1 / H3 as general claims about RNN vs LSTM vs FC — it tells us the regime in which we tested is wrong for the hypothesis to apply. Per the lecturer's instruction, *the analysis is what matters, not whether the experiment confirmed the prior*. Full mechanistic reasoning + per-cell numbers are in `notebooks/analysis.ipynb` §7-§8.
+LSTM beats RNN even at the *high* frequencies because vanilla tanh-RNN's gradient pathology is regime-blind: tanh saturation costs more than the cell-state's gating overhead saves. The cell-state highway clamps gradients per step and stays well-behaved at every frequency. The H1 prediction (RNN advantage at high freq) is specific to a regime where the short context is genuinely beneficial — likely much higher frequencies than tested here.
+
+**Honest caveat**: this study is at one window size on one synthetic problem. The findings are a clean *demonstration* of the cell-state advantage, not a *proof* of universal LSTM superiority. Full mechanistic reasoning + per-cell numbers are in `notebooks/analysis.ipynb` §7–§8.
 
 ### MSE landscape across architectures × frequencies × noise levels
 
