@@ -1,5 +1,5 @@
 {
-  "version": "1.08",
+  "version": "1.09",
   "_comment": "Project-wide config. Bump version on any change. See PRD §3.7 / PLAN §5.1.",
   "dataset": {
     "frequencies_hz": [20, 60, 100, 200],

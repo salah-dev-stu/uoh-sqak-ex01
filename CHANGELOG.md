@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to a simple `MAJOR.MINOR` versioning scheme starting
 at `1.00` and incrementing by `+0.01` per change (RULES.md §15).
 
+## [1.09] — 2026-05-07 (asset refresh)
+
+### Changed
+- Re-rendered `assets/training_demo.png` so it reflects the v1.06+ rerun:
+  shows `VERIFY freqs from SDK: (20, 60, 100, 200)` header, current
+  matrix/OAT timings (9.0 min / 9.2 min, was 5.9 / 7.1), and run-directory
+  timestamps from the post-redesign run (`20260507T...`, was `20260504T...`).
+  No code or docs changed.
+
 ## [1.08] — 2026-05-07 (consistency sweep)
 
 ### Changed
