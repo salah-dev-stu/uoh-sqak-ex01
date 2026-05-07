@@ -81,14 +81,15 @@ def main() -> int:
     print(f"  filled docx: {intermediate}")
 
     pdf = REPO / f"{GROUP_CODE}-ex01.pdf"
-    # xelatex is the only common engine that handles Hebrew (RTL + Unicode) cleanly
-    # Lucida Grande includes Hebrew glyphs (and Latin); xelatex + the
-    # mainfont/CJKmainfont combo renders both scripts inline cleanly.
+    # Arial Unicode MS preserves ASCII hyphen (U+002D) in URLs and group code,
+    # which Lucida Grande silently rewrites to U+2011 (non-breaking hyphen) —
+    # that breaks regex-based URL extraction by an automated grader. Arial
+    # Unicode MS also has full Hebrew coverage (no missing-character warnings).
     rc = subprocess.run(
         [
             "pandoc", str(intermediate), "-o", str(pdf),
             "--pdf-engine=xelatex",
-            "-V", "mainfont=Lucida Grande",
+            "-V", "mainfont=Arial Unicode MS",
             "-V", "geometry:margin=1in",
         ],
         capture_output=True, text=True,

@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to a simple `MAJOR.MINOR` versioning scheme starting
 at `1.00` and incrementing by `+0.01` per change (RULES.md §15).
 
+## [1.11] — 2026-05-07 (PDF font fix — preserve ASCII hyphens for AI grader)
+
+### Changed
+- `scripts/fill_submission_pdf.py`: switched pandoc `mainfont` from
+  `Lucida Grande` to `Arial Unicode MS`. Lucida Grande silently rewrote every
+  ASCII hyphen `-` (U+002D) to non-breaking hyphen `‑` (U+2011) in the rendered
+  PDF, which broke regex-based URL extraction (`github.com/salah-dev-stu/...`
+  with U+2011 dashes 404s on `git clone`). Arial Unicode MS preserves U+002D
+  AND has full Hebrew coverage — verified: `pdftotext` extraction now reports
+  6× U+002D, 0× U+2011, 16× Hebrew chars.
+- Re-rendered `uoh-sqak-ex01.pdf` with the new font.
+
+### Why this matters
+- The course's grading agent is an automated AI evaluator that will likely
+  parse the GitHub URL out of the PDF and `git clone` it. A non-breaking
+  hyphen in the URL silently fails — looks fine to a human, breaks the
+  evaluator. ASCII guarantees both clones cleanly.
+
 ## [1.10] — 2026-05-07 (submission packaging — final)
 
 ### Added
