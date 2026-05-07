@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to a simple `MAJOR.MINOR` versioning scheme starting
 at `1.00` and incrementing by `+0.01` per change (RULES.md §15).
 
+## [1.05] — 2026-05-04 (README screenshot embedding pass)
+
+### Added
+- README now embeds **all 7 plots** from `results/figs/` and the **3 terminal
+  screenshots** in `assets/`:
+  - `assets/test_run.png` + `assets/hard_gates.png` in §Testing
+  - `assets/training_demo.png` after §Quick start
+  - `results/figs/dataset_components.png` in §Overview (problem visualisation)
+  - `results/figs/mse_heatmaps.png`, `mse_per_arch_bar.png` extending §Results
+  - `results/figs/reconstructions.png` in new §Reconstruction examples
+  - `results/figs/loss_curves.png` in new §Training dynamics
+  - `results/figs/oat_sensitivity.png` in new §Sensitivity analysis (OAT)
+- New top-level README sections: **§Reconstruction examples**, **§Training
+  dynamics**, **§Sensitivity analysis (OAT)** — each with embedded plot +
+  caption explaining what to look at.
+
+### Changed
+- README §Table of contents extended from 16 to 19 sections.
+
 ## [1.04] — 2026-05-04 (visual coverage pass)
 
 ### Added

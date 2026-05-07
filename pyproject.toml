@@ -1,6 +1,6 @@
 [project]
 name = "sinusoid-extractor"
-version = "1.04"
+version = "1.05"
 description = "FC vs RNN vs LSTM for extracting a chosen pure sine from a noisy 4-sine mixture (HW1, Course 203.3763, University of Haifa)"
 readme = "README.md"
 requires-python = ">=3.10"

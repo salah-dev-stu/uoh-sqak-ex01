@@ -18,12 +18,15 @@
 8. [Project structure](#project-structure)
 9. [Testing](#testing)
 10. [Results — hypothesis verdicts](#results--hypothesis-verdicts)
-11. [Notebook (analysis)](#notebook-analysis)
-12. [Extending the project](#extending-the-project)
-13. [Troubleshooting](#troubleshooting)
-14. [Contribution guidelines](#contribution-guidelines)
-15. [License & credits](#license--credits)
-16. [AI assistance](#ai-assistance)
+11. [Reconstruction examples](#reconstruction-examples)
+12. [Training dynamics](#training-dynamics)
+13. [Sensitivity analysis (OAT)](#sensitivity-analysis-oat)
+14. [Notebook (analysis)](#notebook-analysis)
+15. [Extending the project](#extending-the-project)
+16. [Troubleshooting](#troubleshooting)
+17. [Contribution guidelines](#contribution-guidelines)
+18. [License & credits](#license--credits)
+19. [AI assistance](#ai-assistance)
 
 ---
 
@@ -38,6 +41,10 @@ The setup:
 - Train three networks — Fully Connected, vanilla RNN, LSTM — to read a 10-sample window from $\Sigma$ + a 4-dim one-hot selector $C$, and emit the matching window from the *pure* version of the selected source.
 
 The experimental matrix is $3 \text{ archs} \times 4 \text{ alphas} \times 3 \text{ seeds} = 36$ training runs, plus a 36-run OAT (One-At-a-Time) sensitivity sweep over four hyperparameters.
+
+![4 sine components — pure (left) and noisy α=0.05 (right)](results/figs/dataset_components.png)
+
+*Each row is one of the 4 fixed frequencies (1, 3, 5, 7 Hz). Left column is the clean signal, right is the same signal with per-sample amplitude noise of ±5%. $\Sigma$ (the network's input) is the sum of the 4 noisy traces.*
 
 ## The hypothesis
 
@@ -120,6 +127,10 @@ uv run python -m sinusoid_extractor.main run-oat
 # 5. Open the analysis notebook
 uv run jupyter notebook notebooks/analysis.ipynb
 ```
+
+Running the full experiment matrix (3 archs × 4 alphas × 3 seeds) completes in ~6 minutes on CPU; the OAT sweep adds ~7 minutes:
+
+![experiment matrix runner output](assets/training_demo.png)
 
 ## Usage / CLI
 
@@ -228,7 +239,13 @@ uv run pytest --cov=src --cov-report=term-missing --cov-fail-under=85
 uv run python scripts/check_file_lines.py
 ```
 
-Current state: **173 tests passing, 95% statement coverage, ruff 0 errors, every `.py` ≤ 150 logical lines.**
+All 173 tests pass with 94.94% coverage:
+
+![pytest run with coverage](assets/test_run.png)
+
+Hard gates verified by `scripts/preflight_submission.py` (ruff, file line limit, coverage, secrets scan, version sync, commit count):
+
+![preflight hard gates 12/12 passed](assets/hard_gates.png)
 
 Test structure mirrors `src/` so locating the test for any source file takes seconds.
 
@@ -263,6 +280,42 @@ The unifying explanation is one number: **the context window is 10 samples at $F
 Within 0.07 of a cycle, every target signal is essentially monotonic across the window. Neither recurrence (RNN's 10-step tanh hidden update) nor long-range memory (LSTM's cell state) can exploit periodicity that doesn't manifest in the input. FC, freed of the sequential bottleneck, treats the 10-dim window as static features and wins by default. The lecturer's hypothesis would be properly testable at a context window of $\geq 1$ full period of the highest target frequency (1000 / 7 ≈ **143 samples**) — out of scope for this homework but the natural follow-up.
 
 **Honest caveat**: this result does not invalidate H1 / H3 as general claims about RNN vs LSTM vs FC — it tells us the regime in which we tested is wrong for the hypothesis to apply. Per the lecturer's instruction, *the analysis is what matters, not whether the experiment confirmed the prior*. Full mechanistic reasoning + per-cell numbers are in `notebooks/analysis.ipynb` §7-§8.
+
+### MSE landscape across architectures × frequencies × noise levels
+
+![MSE heatmaps per noise level](results/figs/mse_heatmaps.png)
+
+*FC dominates at low noise (α=0.01); LSTM closes the gap as α grows. RNN trails consistently — see §Why for the mechanistic explanation.*
+
+### Architecture comparison with 95 % confidence intervals
+
+![Test MSE per architecture and noise level with 95% CI](results/figs/mse_per_arch_bar.png)
+
+*CIs computed across 3 seeds. At α = 0.2, FC and LSTM CIs overlap — the FC advantage weakens at high noise.*
+
+## Reconstruction examples
+
+Held-out test windows showing how each architecture reconstructs the selected pure sine from the noisy combined input $\Sigma$:
+
+![Reconstructions across all 4 target frequencies](results/figs/reconstructions.png)
+
+*Gray dotted = noisy input window. Black thick = clean target. FC (blue), RNN (orange), LSTM (green) predictions overlaid. RNN's visible drift at 5 Hz and 7 Hz is consistent with the cycle-fraction argument (10-sample window covers <0.1 cycle of 7 Hz).*
+
+## Training dynamics
+
+Loss curves across all 4 noise levels:
+
+![Training and validation loss per architecture, per noise level](results/figs/loss_curves.png)
+
+*FC converges fastest and lowest at every α. LSTM continues descending past where RNN plateaus, especially visible at α = 0.05 and α = 0.10. Train/val gap is small everywhere — no overfitting concern.*
+
+## Sensitivity analysis (OAT)
+
+Each panel sweeps one hyperparameter while others are held at the baseline (hidden=128, layers=2, dropout=0.2, lr=0.001):
+
+![OAT sweeps for hidden_size, num_layers, dropout, learning_rate](results/figs/oat_sensitivity.png)
+
+*Hidden size shows the biggest effect on FC (improves) and RNN (degrades). Learning rate is the most sensitive axis for FC. Dropout is roughly flat — confirming the model isn't overfitting on this task.*
 
 ## Notebook (analysis)
 
