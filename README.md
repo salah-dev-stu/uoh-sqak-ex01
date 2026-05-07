@@ -35,7 +35,7 @@
 This project answers a clean, controlled comparative question: **does a recurrent inductive bias help when the input is a 10-sample window cut from a noisy sum of four sinusoids?**
 
 The setup:
-- Generate four pure sinusoids at fixed frequencies $\{1, 3, 5, 7\}$ Hz, each $T=10$ s long at $F_s=1000$ Hz.
+- Generate four pure sinusoids at fixed frequencies $\{20, 60, 100, 200\}$ Hz (chosen so the 10-sample window covers 0.2 / 0.6 / 1.0 / 2.0 cycles — both sub-cycle and multi-cycle regimes), each $T=10$ s long at $F_s=1000$ Hz.
 - Add per-signal amplitude noise $\sim \mathcal{U}(-\alpha, +\alpha)$ and a per-realisation phase $\varphi \sim \mathcal{U}(0, 2\pi)$.
 - Sum the four noisy sines into a combined signal $\Sigma$.
 - Train three networks — Fully Connected, vanilla RNN, LSTM — to read a 10-sample window from $\Sigma$ + a 4-dim one-hot selector $C$, and emit the matching window from the *pure* version of the selected source.
@@ -44,13 +44,13 @@ The experimental matrix is $3 \text{ archs} \times 4 \text{ alphas} \times 3 \te
 
 ![4 sine components — pure (left) and noisy α=0.05 (right)](results/figs/dataset_components.png)
 
-*Each row is one of the 4 fixed frequencies (1, 3, 5, 7 Hz). Left column is the clean signal, right is the same signal with per-sample amplitude noise of ±5%. $\Sigma$ (the network's input) is the sum of the 4 noisy traces.*
+*Each row is one of the 4 fixed frequencies (20, 60, 100, 200 Hz — spanning sub-cycle and multi-cycle regimes within the 10-sample input window). Left column is the clean signal, right is the same signal with per-sample amplitude noise of ±5 %. $\Sigma$ (the network's input) is the sum of the 4 noisy traces.*
 
 ## The hypothesis
 
 The lecturer (Dr. Yoram Segal) proposed:
-- **H1**: RNN extracts high-frequency sines (5, 7 Hz) better than LSTM.
-- **H2**: LSTM extracts low-frequency sines (1, 3 Hz) better than RNN.
+- **H1**: RNN extracts high-frequency sines (100, 200 Hz — multi-cycle within the window) better than LSTM.
+- **H2**: LSTM extracts low-frequency sines (20, 60 Hz — sub-cycle within the window) better than RNN.
 - **H3**: FC sits as a baseline below both, lacking any temporal mechanism.
 
 We test all three with paired Wilcoxon signed-rank tests. The verdict (confirmed / disconfirmed / inconclusive) is reported in `notebooks/analysis.ipynb` §7 and persisted to `results/hypothesis_test.json`.

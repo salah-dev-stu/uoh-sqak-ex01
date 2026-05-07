@@ -9,8 +9,15 @@ from __future__ import annotations
 
 from enum import Enum
 
-FIXED_FREQUENCIES_HZ: tuple[int, ...] = (1, 3, 5, 7)
-"""The 4 fixed source frequencies (lecturer requirement; do NOT randomize)."""
+FIXED_FREQUENCIES_HZ: tuple[int, ...] = (20, 60, 100, 200)
+"""The 4 fixed source frequencies (Hz).
+
+Spans both sub-cycle (20, 60 Hz: 0.2 / 0.6 cycles per 10-sample window at
+Fs=1000 Hz) and multi-cycle (100, 200 Hz: 1.0 / 2.0 cycles per window)
+regimes — chosen so the lecturer's hypothesis about recurrence advantage
+is fairly testable. Earlier draft used (1, 3, 5, 7) Hz which made every
+target sub-cycle and structurally precluded a recurrence advantage.
+"""
 
 CONTEXT_WINDOW: int = 10
 """Length (in samples) of the input window — lecturer requirement."""

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 import numpy as np
 
 from sinusoid_extractor.constants import FIXED_FREQUENCIES_HZ, ONE_HOT_DIM
@@ -15,13 +17,23 @@ class Splitter:
                  starts (int64 ndarray), one_hot (n,4 float32), window_size (int)
         Output : (C, x, y) tuple of float32 arrays
                  shapes (n, 4), (n, window_size), (n, window_size)
-        Setup  : rng (numpy.random.Generator)
+        Setup  : rng (numpy.random.Generator),
+                 frequencies_hz (4-tuple, default = FIXED_FREQUENCIES_HZ)
     """
 
-    def __init__(self, rng: np.random.Generator) -> None:
+    def __init__(
+        self,
+        rng: np.random.Generator,
+        frequencies_hz: Sequence[int] = FIXED_FREQUENCIES_HZ,
+    ) -> None:
         if not isinstance(rng, np.random.Generator):
             raise TypeError("rng must be a numpy.random.Generator")
+        if len(tuple(frequencies_hz)) != ONE_HOT_DIM:
+            raise ValueError(
+                f"frequencies_hz must have length {ONE_HOT_DIM}, got {len(tuple(frequencies_hz))}"
+            )
         self._rng = rng
+        self._frequencies_hz: tuple[int, ...] = tuple(int(f) for f in frequencies_hz)
 
     def assign_one_hot(self, n_examples: int, n_classes: int = ONE_HOT_DIM) -> np.ndarray:
         """Return ``(n, n_classes)`` one-hot matrix with class ids drawn uniformly."""
@@ -56,7 +68,7 @@ class Splitter:
         y = np.empty_like(x)
         class_ids = np.argmax(one_hot, axis=1)
         for i, class_id in enumerate(class_ids):
-            freq = FIXED_FREQUENCIES_HZ[int(class_id)]
+            freq = self._frequencies_hz[int(class_id)]
             pure = pure_by_freq[int(freq)]
             y[i] = pure[starts[i] : starts[i] + window_size]
         return one_hot.astype(np.float32), x.astype(np.float32), y.astype(np.float32)

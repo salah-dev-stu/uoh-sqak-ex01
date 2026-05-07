@@ -141,7 +141,7 @@ Composes:
 
 - **Hard**: noise applied per-signal *before* summation (lecturer's explicit instruction). Post-sum noise is forbidden.
 - **Hard**: phase noise $\sim \mathcal{U}(0, 2\pi)$, full range, drawn once per realization (not per sample).
-- **Hard**: same fixed frequencies $\{1, 3, 5, 7\}$ Hz across all experiments (fair comparison).
+- **Hard**: same fixed frequencies $\{20, 60, 100, 200\}$ Hz across all experiments (fair comparison).
 - **Hard**: identical dataset (same seed) used across the 3 architectures.
 - **Soft**: $\alpha \le 0.20$ recommended; values above produce nearly-destroyed signals (we test up to 0.20).
 
@@ -166,7 +166,7 @@ Composes:
 ### 8.1 Success criteria
 1. Calling `DatasetService.generate(alpha, seed)` produces 9 raw vectors of length 10 000 and a DataBundle of 5 000+1 000+1 000 tuples in < 5 s on CPU.
 2. Same seed → bitwise identical raw vectors and tuples.
-3. The FFT spectrum of $\Sigma$ at α=0.05 shows clearly identifiable peaks at 1, 3, 5, 7 Hz (≥ 3 dB above the noise floor in each adjacent bin).
+3. The FFT spectrum of $\Sigma$ at α=0.05 shows clearly identifiable peaks at 20, 60, 100, 200 Hz (≥ 3 dB above the noise floor in each adjacent bin).
 4. With α=0, $\Sigma = \sum_{k} S_k^{\text{pure}}$ exactly (within float32 tolerance).
 5. With α > 0, sample mean of `noisy_k - pure_k` is bounded by α·A in absolute value.
 

@@ -63,7 +63,7 @@ class DatasetService:
         """Sample disjoint windows and assemble (C, x, y) splits."""
         rng = np.random.default_rng(seed + 1)
         windower = Windower(self.window_size, rng)
-        splitter = Splitter(rng)
+        splitter = Splitter(rng, frequencies_hz=self.frequencies_hz)
         n_total = int(raw["combined_sigma"].shape[0])
         train_s, val_s, test_s = windower.disjoint_starts(n_total, n_train, n_val, n_test)
         pure_by_freq = {f: raw[f"pure_{f}hz"] for f in self.frequencies_hz}
