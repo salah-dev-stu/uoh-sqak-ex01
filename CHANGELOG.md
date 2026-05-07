@@ -6,6 +6,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to a simple `MAJOR.MINOR` versioning scheme starting
 at `1.00` and incrementing by `+0.01` per change (RULES.md §15).
 
+## [1.08] — 2026-05-07 (consistency sweep)
+
+### Changed
+- Replaced all stale 1/3/5/7 Hz references in upstream docs and notebook
+  setup with 20/60/100/200 Hz so every doc tells the same story:
+  - `docs/PRD.md` H1/H2 statements + KPI verdict labels.
+  - `docs/PRD_dataset.md` Nyquist note + raw-signal table (`pure_*hz`,
+    `noisy_*hz` keys).
+  - `docs/PRD_evaluation.md` stratification comment + H1/H2 split.
+  - `docs/PRD_fc_model.md` floor benchmark frequency reference.
+  - `docs/PRD_lstm_model.md` H2 phrasing + cycle-count caveat.
+  - `docs/PRD_rnn_model.md` rewritten H1 paragraph: now correctly explains
+    the multi-cycle regime (1.0 / 2.0 cycles per window at 100 / 200 Hz)
+    and notes that the empirical verdict still disconfirmed H1 — *meaningfully*
+    this time, not because of sub-cycle inputs.
+  - `docs/TODO.md` 9 task labels (NB-012..015, NB-019, NB-044..046, SIG-009).
+  - `README.md` reconstructions caption.
+  - `scripts/regenerate_plots.py` docstring reference.
+  - `tests/unit/test_splitter.py:42` test fixture freqs (1/3/5/7 → 20/60/100/200)
+    so the comment "class index 2 → freq 100 Hz" is accurate; assertion logic
+    unchanged (still uses +10/+20/+30/+40 offsets).
+  - `notebooks/analysis.ipynb` cell 0 (title + H1/H2) and cell 16 (§5.1
+    reconstruction commentary) — fresh interpretations using the new
+    cycle-count framing.
+
+### Preserved (intentional historical pointers)
+- `CHANGELOG.md` entries for 1.05 / 1.06 / 1.07 — historical record.
+- README.md §10 paragraph "the original 1/3/5/7 Hz draft" — explains why
+  the redesign matters.
+- Notebook §7.5 / §8 mentions of "1/3/5/7 Hz design" — explain the flip.
+- `tests/unit/test_dataset_service.py` — uses `_cfg()` fixture with 1/3/5/7
+  freqs; assertions test that DatasetService works *for whatever freqs it's
+  given*, which is a desirable property to keep tested.
+
 ## [1.07] — 2026-05-07 (frequency redesign + full re-experiment)
 
 ### Changed

@@ -34,9 +34,9 @@ We use `torch.nn.LSTM(input_size=5, hidden_size=H, num_layers=L, batch_first=Tru
 The cell state $c_t$ is a **parallel highway** that bypasses the tanh nonlinearity in the recurrence — gradients can flow through $c_t$ across many steps without vanishing. This is *the* fundamental difference from vanilla RNN.
 
 ### 1.2 The lecturer's hypothesis (H2)
-**LSTM excels at low frequencies (1, 3 Hz)** because slow signals require integration over long context to disambiguate from noise. The cell state's long-term memory should help.
+**LSTM excels at low frequencies (20, 60 Hz — sub-cycle within the 10-sample window)** because most of the periodicity falls *across* the window edge; the model has to integrate to recover phase, and the cell state is exactly designed for that integration.
 
-**Caveat**: at $F_s = 1000$ Hz and a 10-sample window, even 1 Hz completes only $0.01$ cycles — the recurrent advantage may again be modest. We test and report honestly. The hypothesis may be partially disconfirmed; the analysis still has value.
+**Cycle counts** at $F_s = 1000$ Hz, 10-sample window: 20 Hz → 0.2 cycle, 60 Hz → 0.6 cycle, 100 Hz → 1.0 cycle, 200 Hz → 2.0 cycle. The first two are the sub-cycle "low" regime where H2 applies; the last two are multi-cycle "high" where H1 applies. We test and report honestly.
 
 ### 1.3 Parameter count
 For 1-layer LSTM with input=5, hidden=H:

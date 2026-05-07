@@ -301,7 +301,7 @@ Held-out test windows showing how each architecture reconstructs the selected pu
 
 ![Reconstructions across all 4 target frequencies](results/figs/reconstructions.png)
 
-*Gray dotted = noisy input window. Black thick = clean target. FC (blue), RNN (orange), LSTM (green) predictions overlaid. RNN's visible drift at 5 Hz and 7 Hz is consistent with the cycle-fraction argument (10-sample window covers <0.1 cycle of 7 Hz).*
+*Gray dotted = noisy input window. Black thick = clean target. FC (blue), RNN (orange), LSTM (green) predictions overlaid. The 100 Hz and 200 Hz panels show whole cycles within the 10-sample window; the 20 Hz and 60 Hz panels show sub-cycle slices. LSTM tracks the target tightly across all four; FC's static-features approach struggles most where the periodicity is most visible.*
 
 ## Training dynamics
 

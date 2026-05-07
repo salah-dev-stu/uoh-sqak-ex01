@@ -30,7 +30,7 @@ $$
 $$
 
 ### 1.2 Stratified evaluation
-The test set contains tuples drawn from all 4 target frequencies. We **stratify** metrics per `target_freq_index` (0..3 ↔ 1, 3, 5, 7 Hz) so we can read off per-frequency strengths/weaknesses — central to testing H1 and H2.
+The test set contains tuples drawn from all 4 target frequencies. We **stratify** metrics per `target_freq_index` (0..3 ↔ 20, 60, 100, 200 Hz) so we can read off per-frequency strengths/weaknesses — central to testing H1 and H2.
 
 ### 1.3 Baseline: predict zero
 The trivial constant predictor $\hat{y} = \mathbf{0}$ achieves $\text{MSE}_{\text{baseline}} = \mathbb{E}[y^2]$. Any architecture that doesn't beat this is failing.
@@ -47,7 +47,7 @@ Sweep grid (PLAN.md §5.1):
 For each (architecture, hyperparam, value) combination → one full train+evaluate run. Total: $4 \cdot 3 \cdot 3 = 36$ runs. With 3 seeds: 108 runs (time permitting).
 
 ### 1.5 Hypothesis testing
-For each of H1 (RNN > LSTM at 5/7 Hz) and H2 (LSTM > RNN at 1/3 Hz):
+For each of H1 (RNN > LSTM at 100/200 Hz, multi-cycle) and H2 (LSTM > RNN at 20/60 Hz, sub-cycle):
 - Compute paired test (Wilcoxon signed-rank) across per-cell test losses for the architecture pair, paired by (freq, alpha, seed).
 - Report the median paired difference and a 95% CI via bootstrap.
 - Report effect size (Cohen's $d$ approximation).

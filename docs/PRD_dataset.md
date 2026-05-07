@@ -49,7 +49,7 @@ $$
 - Duration $T = 10$ s
 - Samples per signal $N = F_s \cdot T = 10\,000$
 
-Per Nyquist, frequencies up to 500 Hz are representable; our 1/3/5/7 Hz are well below the limit, with thousands of samples per cycle ensuring smooth waveforms.
+Per Nyquist, frequencies up to 500 Hz are representable; our 20/60/100/200 Hz are all comfortably below the limit (max 200 Hz = 40 % of Nyquist), with at least 5 samples per cycle even at the highest target.
 
 ---
 
@@ -82,14 +82,14 @@ Loaded from `config/setup.json` § `dataset`:
 Persisted to `data/raw/dataset_alpha{α:.2f}_seed{seed}.npz`:
 | Key | Shape | Dtype | Meaning |
 |---|---|---|---|
-| `pure_1hz` | (10000,) | float32 | clean 1 Hz sine |
-| `pure_3hz` | (10000,) | float32 | clean 3 Hz sine |
-| `pure_5hz` | (10000,) | float32 | clean 5 Hz sine |
-| `pure_7hz` | (10000,) | float32 | clean 7 Hz sine |
-| `noisy_1hz` | (10000,) | float32 | 1 Hz with amp+phase noise |
-| `noisy_3hz` | (10000,) | float32 | 3 Hz with amp+phase noise |
-| `noisy_5hz` | (10000,) | float32 | 5 Hz with amp+phase noise |
-| `noisy_7hz` | (10000,) | float32 | 7 Hz with amp+phase noise |
+| `pure_20hz` | (10000,) | float32 | clean 20 Hz sine (0.2 cycle/window) |
+| `pure_60hz` | (10000,) | float32 | clean 60 Hz sine (0.6 cycle/window) |
+| `pure_100hz` | (10000,) | float32 | clean 100 Hz sine (1.0 cycle/window) |
+| `pure_200hz` | (10000,) | float32 | clean 200 Hz sine (2.0 cycle/window) |
+| `noisy_20hz` | (10000,) | float32 | 20 Hz with amp+phase noise |
+| `noisy_60hz` | (10000,) | float32 | 60 Hz with amp+phase noise |
+| `noisy_100hz` | (10000,) | float32 | 100 Hz with amp+phase noise |
+| `noisy_200hz` | (10000,) | float32 | 200 Hz with amp+phase noise |
 | `combined_sigma` | (10000,) | float32 | sum of 4 noisy sines |
 
 Plus metadata in the same `.npz`:

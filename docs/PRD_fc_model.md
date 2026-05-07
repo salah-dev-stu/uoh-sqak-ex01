@@ -97,7 +97,7 @@ Registered via `@register("fc")` in `models/registry.py`.
 |---|---|---|
 | Forward latency | < 0.5 ms / sample (CPU, batch=64) | Trivially fast |
 | Param count (H=128, L=2) | ~19 722 | Documented in §1.3 |
-| Train MSE on α=0.01, freq=3Hz | converges to < 0.05 in ≤ 30 epochs | Floor benchmark |
+| Train MSE on α=0.01, freq=60 Hz | converges to < 0.05 in ≤ 30 epochs | Floor benchmark |
 | Test MSE on α=0.05 (mean over freqs) | < 0.20 | Acceptance for "non-trivial baseline" |
 
 ---

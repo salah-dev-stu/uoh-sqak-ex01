@@ -40,8 +40,8 @@ PyTorch's own examples include `torch.nn.RNN` and `torch.nn.LSTM` toy regression
 
 ### 2.1 Primary goal
 Empirically test the lecturer's hypothesis:
-- **H1**: RNN extracts **high-frequency** sines (5 Hz, 7 Hz) better than LSTM, because its short effective context matches the rapid oscillation.
-- **H2**: LSTM extracts **low-frequency** sines (1 Hz, 3 Hz) better than RNN, because its cell state preserves long-range structure.
+- **H1**: RNN extracts **high-frequency** sines (100 Hz, 200 Hz — multi-cycle within the 10-sample window) better than LSTM, because its short effective context matches the rapid oscillation.
+- **H2**: LSTM extracts **low-frequency** sines (20 Hz, 60 Hz — sub-cycle within the window) better than RNN, because its cell state preserves long-range structure.
 - **H3**: FC sits as a baseline below both, lacking any temporal mechanism.
 
 ### 2.2 Secondary goals
@@ -52,8 +52,8 @@ Empirically test the lecturer's hypothesis:
 ### 2.3 Success metrics (KPIs)
 | KPI | Target | Measured by |
 |---|---|---|
-| H1 verdict | Statistically defensible answer (with effect size and confidence interval) on whether RNN > LSTM at 5/7 Hz | Notebook §7 |
-| H2 verdict | Same, for LSTM > RNN at 1/3 Hz | Notebook §7 |
+| H1 verdict | Statistically defensible answer (with effect size and confidence interval) on whether RNN > LSTM at 100/200 Hz | Notebook §7 |
+| H2 verdict | Same, for LSTM > RNN at 20/60 Hz | Notebook §7 |
 | H3 verdict | Same, for FC vs. recurrent pair across all frequencies | Notebook §7 |
 | Reconstruction MSE | Best architecture must beat the "predict zero" baseline by ≥ 10× MSE on at least one (target_freq, noise) configuration | Eval script |
 | Coverage | ≥ 85% statement coverage globally | `uv run pytest --cov` |

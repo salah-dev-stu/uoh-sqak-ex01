@@ -39,9 +39,9 @@ We chose (3) because:
 - Simple to reason about and test.
 
 ### 1.2 The lecturer's hypothesis (H1)
-**RNN excels at high frequencies (5, 7 Hz)** because the rapid oscillation completes multiple cycles within the 10-sample window: $5\,\text{Hz} \cdot \tfrac{10}{1000\,\text{Hz}} = 0.05$ cycles per window. Wait — that's *less* than one cycle. So in fact at $F_s = 1000$ Hz and 10-sample windows, even 7 Hz only completes $7 \cdot 10 / 1000 = 0.07$ cycles. **All four target frequencies are slow relative to the window**; the recurrent advantage if any will be subtle.
+**RNN excels at high frequencies (100, 200 Hz)** because the rapid oscillation completes whole cycles within the 10-sample window: $100\,\text{Hz} \cdot \tfrac{10}{1000\,\text{Hz}} = 1.0$ cycle per window, and $200\,\text{Hz} \to 2.0$ cycles. The 20 / 60 Hz channels sit in the sub-cycle regime (0.2 / 0.6 cycles), which is why H2 hands those to LSTM. The vanilla RNN's tanh recurrence has a fair shot at the multi-cycle regime: each 10-step unfold sees a full sinusoidal swing, so the network can in principle learn a tight phase tracker without needing the LSTM's gating overhead.
 
-We document this honestly in the analysis: the hypothesis may be partially **disconfirmed** because the time scale is short. The lecturer values the analysis over the result.
+The empirical verdict — see `notebooks/analysis.ipynb` §7.5 — is that LSTM still wins at high freq (RNN mean MSE 4.87 × 10⁻⁴ vs LSTM 1.67 × 10⁻⁴, p = 1.2e-07). The most likely mechanism is that tanh's gradient pathology is regime-blind once recurrence has signal to grip onto; LSTM's cell-state highway sidesteps this. **The frequency design makes the test meaningful** — H1 is *meaningfully* disconfirmed rather than precluded by sub-cycle inputs.
 
 ### 1.3 Parameter count
 For `nn.RNN(input=5, hidden=H, layers=1)`:

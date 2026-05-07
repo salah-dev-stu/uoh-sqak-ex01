@@ -35,11 +35,11 @@ def test_build_tuples_shapes(rng) -> None:
 
 
 def test_build_tuples_y_matches_pure_for_class(rng) -> None:
-    s = Splitter(rng, frequencies_hz=(1, 3, 5, 7))
+    s = Splitter(rng, frequencies_hz=(20, 60, 100, 200))
     combined = np.arange(20, dtype=np.float32)
-    pure = {1: combined + 10, 3: combined + 20, 5: combined + 30, 7: combined + 40}
+    pure = {20: combined + 10, 60: combined + 20, 100: combined + 30, 200: combined + 40}
     starts = np.array([0], dtype=np.int64)
-    oh = np.array([[0, 0, 1, 0]], dtype=np.float32)  # class index 2 → freq 5 Hz
+    oh = np.array([[0, 0, 1, 0]], dtype=np.float32)  # class index 2 → freq 100 Hz
     _, _, y = s.build_tuples(combined, pure, starts, oh, window_size=3)
     assert (y[0] == np.array([30, 31, 32], dtype=np.float32)).all()
 

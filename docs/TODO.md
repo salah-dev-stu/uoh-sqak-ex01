@@ -210,7 +210,7 @@
 - [x] SIG-006: Implement `_time_axis() -> np.ndarray` returning `t = np.arange(N)/Fs`
 - [x] SIG-007: Implement `pure(frequency_hz, phase=0.0) -> np.ndarray`
 - [x] SIG-008: Implement `pure_all(frequencies) -> dict[freq, ndarray]`
-- [x] SIG-009: Unit test: pure(1Hz) length == Fs * T
+- [x] SIG-009: Unit test: pure(20Hz) length == Fs * T
 - [x] SIG-010: Unit test: pure(0Hz) is constant
 - [x] SIG-011: Unit test: pure has zero mean over integer cycles
 - [x] SIG-012: Unit test: pure phase shift offsets sample 0
@@ -977,14 +977,14 @@
 
 ### 15b — Dataset Visualization [10]
 - [x] NB-011: Markdown intro to dataset
-- [x] NB-012: Load and plot pure sine 1 Hz
-- [x] NB-013: Load and plot pure sine 3 Hz
-- [x] NB-014: Load and plot pure sine 5 Hz
-- [x] NB-015: Load and plot pure sine 7 Hz
+- [x] NB-012: Load and plot pure sine 20 Hz
+- [x] NB-013: Load and plot pure sine 60 Hz
+- [x] NB-014: Load and plot pure sine 100 Hz
+- [x] NB-015: Load and plot pure sine 200 Hz
 - [x] NB-016: Plot noisy versions (4 panel grid)
 - [x] NB-017: Plot Σ combined signal
 - [x] NB-018: FFT spectrum of Σ (frequency axis 0–50 Hz)
-- [x] NB-019: Annotate the 4 expected peaks (1, 3, 5, 7 Hz)
+- [x] NB-019: Annotate the 4 expected peaks (20, 60, 100, 200 Hz)
 - [x] NB-020: Markdown commentary on visibility of peaks
 
 ### 15c — Architectures + LaTeX [12]
@@ -1015,9 +1015,9 @@
 - [x] NB-041: Heatmap MSE × (arch, target_freq) for alpha=0.05
 - [x] NB-042: Heatmap for alpha=0.10
 - [x] NB-043: Heatmap for alpha=0.20
-- [x] NB-044: Reconstruction plots: pred vs true for FC at 3 Hz
-- [x] NB-045: Reconstruction plots: pred vs true for RNN at 7 Hz
-- [x] NB-046: Reconstruction plots: pred vs true for LSTM at 1 Hz
+- [x] NB-044: Reconstruction plots: pred vs true for FC at 60 Hz
+- [x] NB-045: Reconstruction plots: pred vs true for RNN at 200 Hz
+- [x] NB-046: Reconstruction plots: pred vs true for LSTM at 20 Hz
 - [x] NB-047: Bar plot: best test MSE per arch
 - [x] NB-048: Test MSE vs noise level line plot
 - [x] NB-049: R² score table

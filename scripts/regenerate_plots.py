@@ -4,7 +4,7 @@
    train+val per architecture (6 lines each panel, log-y).
 
 2. results/figs/reconstructions.png — 2x2 grid, one panel per target
-   frequency (1/3/5/7 Hz), each panel overlaying noisy input + clean
+   frequency (20/60/100/200 Hz), each panel overlaying noisy input + clean
    target + FC/RNN/LSTM predictions on a representative test window.
 
 Reads the artefacts under results/runs/ and the seed=42 base-matrix runs
