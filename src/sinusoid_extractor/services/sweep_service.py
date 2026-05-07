@@ -93,6 +93,10 @@ class SweepService:
     def _train_and_eval(self, arch: str, bundle, alpha: float, seed: int) -> RunHandle:
         handle, result = self.training.train(arch=arch, bundle=bundle, seed=seed)
         report = self.evaluation.evaluate(handle, bundle)
+        per_freq_cols = {
+            f"per_freq_mse_{int(f)}hz": report.per_freq_mse.get(int(f), float("nan"))
+            for f in self.dataset_service.frequencies_hz
+        }
         append_csv_row(
             self.results_dir / "experiment_matrix.csv",
             {
@@ -107,10 +111,7 @@ class SweepService:
                 "baseline_mse": report.baseline_mse,
                 "epochs_run": result.epochs_run,
                 "wall_clock_s": result.wall_clock_seconds,
-                "per_freq_mse_1hz": report.per_freq_mse.get(1, float("nan")),
-                "per_freq_mse_3hz": report.per_freq_mse.get(3, float("nan")),
-                "per_freq_mse_5hz": report.per_freq_mse.get(5, float("nan")),
-                "per_freq_mse_7hz": report.per_freq_mse.get(7, float("nan")),
+                **per_freq_cols,
             },
         )
         return handle
