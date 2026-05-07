@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to a simple `MAJOR.MINOR` versioning scheme starting
 at `1.00` and incrementing by `+0.01` per change (RULES.md §15).
 
+## [1.04] — 2026-05-04 (visual coverage pass)
+
+### Added
+- `scripts/regenerate_plots.py` — re-renders `loss_curves.png` (2×2
+  multi-noise grid, train+val per arch) and `reconstructions.png` (4 target
+  frequencies, 5 traces each: noisy input + clean target + per-arch
+  predictions, with per-window MSE annotations) from existing artefacts.
+- Notebook §4 "Observations" markdown cell: 3 bullet observations on
+  train/val tracking, noise-level floor, and LSTM late-epoch descent.
+- Notebook §5.1 "Reconstruction examples" markdown subsection embedding
+  the new reconstructions plot with mechanistic commentary linking it
+  back to §7.5.
+
+### Changed
+- Notebook §4 loss-curves cell rewritten as 2×2 grid (one panel per α),
+  6 lines per panel (FC/RNN/LSTM × train/val), shared legend at top.
+- `results/figs/loss_curves.png` regenerated from the multi-noise grid.
+
 ## [1.03] — 2026-05-04 (pre-submission polish)
 
 ### Added
