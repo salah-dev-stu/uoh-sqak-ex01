@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to a simple `MAJOR.MINOR` versioning scheme starting
 at `1.00` and incrementing by `+0.01` per change (RULES.md §15).
 
+## [1.10] — 2026-05-07 (submission packaging — final)
+
+### Added
+- `uoh-sqak-ex01.docx` (intermediate; produced by
+  `scripts/fill_submission_pdf.py`) and **`uoh-sqak-ex01.pdf`** (the final
+  submission cover sheet uploaded to Moodle).
+- `.gitignore` excludes worker / orchestration context (`CLAUDE.md`,
+  `RULES.md`, `IDEA.md`) from the public repo.
+
+### Final metadata (locked at submission)
+- Group code: `uoh-sqak` (Salah Qadah + Andalus Kalash).
+- Self-grade recommendation: **90**.
+- Student 1: Salah Qadah / סלאח קדח (ID 323039974).
+- Student 2: Andalus Kalash / אנדלוס כלש (ID 211435797).
+- GitHub: <https://github.com/salah-dev-stu/uoh-sqak-ex01> (public).
+- Late: no (submitted before deadline 2026-05-07 23:59).
+
+### Changed
+- `scripts/fill_submission_pdf.py` updated with locked values.
+- History scrubbed of `IDEA.md` via `git filter-repo --path IDEA.md
+  --invert-paths` so the public repo carries no orchestration context.
+
 ## [1.09] — 2026-05-07 (asset refresh)
 
 ### Changed

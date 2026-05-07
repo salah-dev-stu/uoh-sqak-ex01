@@ -4,6 +4,11 @@
 *.pem
 credentials.json
 
+# --- worker / orchestration context (not for the public repo) ---
+CLAUDE.md
+RULES.md
+IDEA.md
+
 # --- python ---
 __pycache__/
 *.py[cod]
@@ -45,3 +50,4 @@ data/raw/*.npz
 data/processed/*.npz
 results/runs/
 logs/
+uoh-rl07-ex01.docx

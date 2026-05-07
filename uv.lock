@@ -3241,7 +3241,7 @@ wheels = [
 
 [[package]]
 name = "sinusoid-extractor"
-version = "1.9"
+version = "1.10"
 source = { editable = "." }
 dependencies = [
     { name = "matplotlib" },
